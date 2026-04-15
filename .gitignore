@@ -1,0 +1,17 @@
+
+Plaintext
+# Base de Dados Local (NUNCA SUBIR PARA O GITHUB)
+vault.db
+
+# Ficheiros de Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variáveis de Ambiente e Segredos (Se usares no futuro)
+.env
+
+# Ambientes Virtuais
+venv/
+env/
