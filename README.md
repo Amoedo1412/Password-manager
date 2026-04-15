@@ -1,26 +1,45 @@
-# 🔐 VaultPy - Secure Password Manager
+# 🔐 VaultPy - Zero-Knowledge Password Manager
 
-O **VaultPy** é um gestor de passwords focado na privacidade e segurança absoluta do utilizador. Ao contrário de soluções em cloud, o VaultPy armazena todos os segredos localmente, garantindo que o utilizador é o único detentor das chaves de encriptação.
+![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
+![Security](https://img.shields.io/badge/Security-AES--256-green.svg)
+![Storage](https://img.shields.io/badge/Storage-SQLite-lightgrey.svg)
 
-## 🛡️ Arquitetura de Segurança
+O **VaultPy** é um gestor de credenciais local de alta segurança, desenvolvido em Python. Desenhado sob o princípio de *Zero-Knowledge*, garante que as chaves de desencriptação nunca são armazenadas em disco, sendo geradas dinamicamente em memória apenas durante sessões autenticadas.
 
-Este projeto foi desenhado seguindo as melhores práticas de criptografia moderna:
+## 🛡️ Arquitetura de Segurança & Criptografia
 
-* **Encriptação de Dados:** Utilização de **AES-256-GCM** (Advanced Encryption Standard) para garantir a confidencialidade e integridade dos dados guardados.
-* **Derivação de Chave (KDF):** A chave de encriptação não é armazenada. É gerada dinamicamente a partir da Master Password do utilizador usando **PBKDF2** com 600.000 iterações e Salt único.
-* **Proteção da Master Password:** Armazenamento via **Argon2** ou **Bcrypt**, tornando ataques de dicionário e rainbow tables virtualmente impossíveis.
-* **2FA (Two-Factor Authentication):** Camada extra de segurança via **TOTP** (Time-based One-Time Password), compatível com Google Authenticator.
+Este projeto implementa standards de nível militar para proteção de dados contra exfiltração e ataques de força bruta:
 
-## ✨ Funcionalidades
-- ✅ **Cofre Encriptado:** Armazenamento seguro de credenciais em base de dados SQLite.
-- 🔑 **Gerador de Passwords:** Algoritmo para criação de senhas fortes com entropia configurável.
-- 🛡️ **Análise de Vulnerabilidade:** Verificação em tempo real da força das passwords.
-- ⏱️ **Auto-Clipboard Clear:** Limpeza automática da área de transferência após utilização.
-- 🚫 **Arquitetura Zero-Knowledge:** O software não tem conhecimento da sua Master Password; se a perder, os dados são irrecuperáveis (Segurança Máxima).
+- **Encriptação de Dados (AES-128/256 CBC):** Utilização da biblioteca `cryptography` (Fernet) para garantir confidencialidade absoluta. O texto cifrado armazena o *Initialization Vector (IV)* para garantir entropia mesmo em passwords repetidas.
+- **Derivação de Chave (PBKDF2-HMAC):** A chave AES não é guardada. É derivada da *Master Password* do utilizador através de PBKDF2 com algoritmo SHA-256, utilizando **480.000 iterações** e um *Salt* criptográfico de 16 bytes.
+- **Proteção Anti-Brute Force:** Mecanismo de *lockout* automático que encerra e bloqueia o processo após 3 tentativas de autenticação falhadas.
+- **Shoulder Surfing Mitigation:** Os campos de input de credenciais não apresentam feedback visual (nem carateres, nem asteriscos) para ocultar a dimensão da *Master Password*.
+
+## ✨ Funcionalidades Principais
+- ✅ **Cofre 100% Local (SQLite):** Os dados não são enviados para nenhuma *cloud* ou API externa.
+- ✅ **Autenticação Segura:** Validação de login via *Hashing* seguro (nunca armazenando a senha mestre legível).
+- ✅ **UI Moderna e Responsiva:** Interface gráfica em *Dark Mode* desenvolvida com `CustomTkinter`.
+- ✅ **Gestão Ágil:** Cópia de credenciais para a *clipboard* com um clique.
 
 ## 🛠️ Stack Tecnológica
 - **Linguagem:** Python
-- **Criptografia:** `cryptography` library
-- **Base de Dados:** SQLite3
-- **Interface:** CustomTkinter (Desktop GUI) ou Streamlit
-- **MFA:** `pyotp`
+- **Interface Gráfica:** CustomTkinter
+- **Criptografia:** `cryptography.hazmat` (Primitivas criptográficas)
+- **Base de Dados:** SQLite3 (Motor embutido)
+- **Utilitários:** `pyperclip`, `hashlib`
+
+## 🚀 Como Executar o Projeto
+
+**1. Clonar o repositório:**
+```bash
+git clone [https://github.com/o-teu-username/VaultPy.git](https://github.com/o-teu-username/VaultPy.git)
+cd VaultPy
+2. Instalar as dependências:
+
+Bash
+pip install cryptography customtkinter pyperclip
+3. Iniciar a Aplicação:
+
+Bash
+python gui.py
+(No primeiro acesso, a aplicação irá configurar o seu cofre e gerar o Salt da Master Password).
